@@ -1,0 +1,97 @@
+set moo 7
+set moo
+set moo 8
+set moo
+set moop hello
+set
+set moop @moo!@moop
+set moo @moop
+set mooo @moop!@unknown
+set
+tes moop
+set
+alias set wtf
+alias set
+alias something somethingElse
+alias
+saila set
+alias
+
+~Direct aliases:
+alias s set	~ create an alias to the internal set command
+s m mine	~ create the environment variable m with value mine
+s m		~ display the content of the environment variable m
+
+~Indirect aliases:
+alias al alias	~ create an alias to the internal alias command
+al a al		~ create an alias to the alias al
+a		~ display the content of all aliases
+a ll {ls -al}	~ create an alias to the complex string: ls -al
+ll script_file		~ execute the external command: ls -al script_file
+
+alias xyz {set foo}
+xyz 1234!otherstuff		~ execute the internal command: set foo 1234!otherstuff
+
+~Complex strings:
+set ank1 {My little string.}
+set ank2 {# foobaz}!@ank1
+set ank2
+~    Would display
+~  ank2	{# foobaz}!{My little string.}
+
+alias fee $
+{fi fo fum}
+~Is the same as: alias fee {fi fo fum}
+
+set Path /these/are/folders!/so/are/these
+
+alias xyzzy plugh? set Path @Path!/home/bin
+
+~Is the same as: 
+~alias xyzzy plugh
+~set Path @Path!/home/bin
+echo This is a line of text. La Di Da.  It is an extremely long line of text. $
+It seems to gone on and on.
+~Results in the following output line:
+~This is a line of text. La Di Da.  It is an extremely long line of text. It seems to gone on and on.
+
+echo @Path	~Displays the content of the environment variable Path
+
+echo Setting XYZ?set XYZ blast?set XYZ	~ Executes three commands
+
+alias
+set
+
+alias e edit
+where run e
+
+~The following sequence of commands should result in: set is an internal command.
+where run set
+
+~The following sequence of commands should result in: alias is an internal command.
+alias a alias
+where run a
+
+~The following sequence of commands should result in: adventure was not found.
+alias fun adventure
+where run fun
+
+~if file system still in place, this should result in: ../project5
+where dir project5
+
+~Should result in: ./mcsh5
+where run mcsh5
+
+~Should result in: ./mcshlist.h
+where any mcshlist.h
+
+~Testing alias with external commands
+ls
+ls -al
+ll
+ll ..
+
+~testing permissions
+where any mcsh5		~should return ./mcsh5
+where dir mcsh5		~shouldn't find anything because not a directory
+

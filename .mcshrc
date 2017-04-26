@@ -1,0 +1,6 @@
+echo This is an echo from .mcshrc
+set PATH /bin!/usr/bin!/made/up/dir
+alias murp burp
+alias s set		~this is a test comment
+random external command
+echo This is the ending echo from .mcshrc
