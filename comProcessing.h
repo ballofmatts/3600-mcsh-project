@@ -9,7 +9,6 @@ All functions relating to parsing/running commands given in the command
 prompt. This includes work with aliases and external commands.
 **********************************************************************/
 
-
 /************************************************
 parseAliases(char *)
 input: character string for variable in question
@@ -21,8 +20,6 @@ Otherwise, it will do nothing and return 0.
 ************************************************/
 int parseAliases(char *var);
 
-
-
 /************************************************
 int parseCommand(char *, int)
 input: character string
@@ -32,7 +29,6 @@ seperate commands held in the argsV array.
 Also increments numArgs to keep track of it.
 ************************************************/
 int parseCommand(char *input, int lineExtensionFlag);
-
 
 /************************************************
 processInternalCommand()
@@ -44,7 +40,6 @@ which variables follow.
 Returns an int of 1 if wanting to exit, 0 otherwise.
 ************************************************/
 int processInternalCommand();
-
 
 /************************************************
 void *runExternalCommand(void *arguments)
@@ -66,7 +61,6 @@ paths. If no path given, will check all paths in PATH env variable.
 ************************************************/
 int whereTest(char *testPath, char *testElement, char *buffer);
 
-
 /************************************************
 void freeVariables
 input: no input
@@ -74,6 +68,5 @@ return: no output
 Free's all of the args that were allocated
 ************************************************/
 void freeVariables();
-
 
 #endif

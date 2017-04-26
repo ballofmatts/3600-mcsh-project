@@ -167,21 +167,14 @@ Supports:
 #include "memory.h"
 #include "comProcessing.h"
 
+#define BUFFER_SIZE 150 //max buffer size
 
+int numArgs = 0;  //number of command arguments
+int maxArgs = 10; //number of arguments shell able to handle
 
-#define BUFFER_SIZE 150	//max buffer size
-
-
-int numArgs=0;			//number of command arguments
-int maxArgs=10;			//number of arguments shell able to handle
-
-
-Node *env, *ali;		//environmental variable and alias lists
+Node *env, *ali; //environmental variable and alias lists
 
 char **argsV;
-
-
-
 
 /************************************************
 main program
@@ -210,57 +203,57 @@ Main loop for the shell. Does 3 things:
 
 int main(int argc, char *argv[])
 {
-	int exitFlag=0;
+	int exitFlag = 0;
 	char *input;
 	char buffer[BUFFER_SIZE];
-	int lineExtensionFlag=0;
+	int lineExtensionFlag = 0;
 	int i;
 
-	setbuf(stdout,NULL);	//disables buffering for stdout
+	setbuf(stdout, NULL); //disables buffering for stdout
 
-	struct passwd *pw = getpwuid( getuid() );
+	struct passwd *pw = getpwuid(getuid());
 	char *homedir = pw->pw_dir;
-//	char *homedir="./";
-	mcshInsert(&env,"HOME",homedir);
+	//	char *homedir="./";
+	mcshInsert(&env, "HOME", homedir);
 
 	//init dynamic argument array
-	argsV=(char**)mcshMalloc(maxArgs*sizeof(char*));
-	for(i=0;i<maxArgs;i++)
+	argsV = (char **)mcshMalloc(maxArgs * sizeof(char *));
+	for (i = 0; i < maxArgs; i++)
 	{
-	    	argsV[i]=(char*)mcshMalloc(BUFFER_SIZE*sizeof(char));
+		argsV[i] = (char *)mcshMalloc(BUFFER_SIZE * sizeof(char));
 	}
-
 
 	//.mcshrc subroutine
 	{
 		FILE *fp;
 		char mcshrcdir[BUFFER_SIZE];
-		strcpy(mcshrcdir,homedir);
-		strcat(mcshrcdir,"/.mcshrc");
+		strcpy(mcshrcdir, homedir);
+		strcat(mcshrcdir, "/.mcshrc");
 
-		if(!(fp=fopen(mcshrcdir,"r")))
+		if (!(fp = fopen(mcshrcdir, "r")))
 		{
-			printf("%s\n",mcshrcdir);
+			printf("%s\n", mcshrcdir);
 			printf("No .mcshrc file found.\n");
 		}
 		else
 		{
-			while(exitFlag!=1)
+			while (exitFlag != 1)
 			{
-				input=fgets(buffer,BUFFER_SIZE,fp);
-				if(feof(fp)) {
+				input = fgets(buffer, BUFFER_SIZE, fp);
+				if (feof(fp))
+				{
 					break;
 				}
-				lineExtensionFlag=parseCommand(input,lineExtensionFlag);
-				if(lineExtensionFlag==1)
+				lineExtensionFlag = parseCommand(input, lineExtensionFlag);
+				if (lineExtensionFlag == 1)
 					continue;
 
-				exitFlag=processInternalCommand();
+				exitFlag = processInternalCommand();
 			}
 			fclose(fp);
-			if(exitFlag==1)
+			if (exitFlag == 1)
 			{
-				exitFlag=0;	//resetting for possible script use
+				exitFlag = 0; //resetting for possible script use
 				freeVariables();
 				return 0;
 			}
@@ -268,14 +261,15 @@ int main(int argc, char *argv[])
 	}
 
 	//Looks for command line arguments.
-	if(argc>1) {
+	if (argc > 1)
+	{
 		FILE *fp;
 		//checks to see if command line is a file
-		if(!(fp=fopen(argv[1],"r"))) //if no file exists, just processes the command and exits
+		if (!(fp = fopen(argv[1], "r"))) //if no file exists, just processes the command and exits
 		{
-			for(i=1;i<argc;i++)
+			for (i = 1; i < argc; i++)
 			{
-				strcpy(argsV[i-1],argv[i]);
+				strcpy(argsV[i - 1], argv[i]);
 				numArgs++;
 			}
 			processInternalCommand();
@@ -286,24 +280,25 @@ int main(int argc, char *argv[])
 		//inputting each line at a time into the shell
 		else
 		{
-			while(exitFlag!=1)
+			while (exitFlag != 1)
 			{
 				printf("mcsh> ");
-				input=fgets(buffer,BUFFER_SIZE,fp);
-				if(feof(fp)) {
+				input = fgets(buffer, BUFFER_SIZE, fp);
+				if (feof(fp))
+				{
 					printf("\nEnd of script. Quitting..\n\n");
 					freeVariables();
 					return 0;
 				}
-				printf("%s",input);
-				lineExtensionFlag=parseCommand(input,lineExtensionFlag);
-				if(lineExtensionFlag==1)
+				printf("%s", input);
+				lineExtensionFlag = parseCommand(input, lineExtensionFlag);
+				if (lineExtensionFlag == 1)
 					continue;
 				printf("\n");
-				exitFlag=processInternalCommand();
+				exitFlag = processInternalCommand();
 			}
 			fclose(fp);
-			if(exitFlag==1)
+			if (exitFlag == 1)
 			{
 				freeVariables();
 				return 0;
@@ -311,24 +306,22 @@ int main(int argc, char *argv[])
 		}
 	}
 
-
 	//Main shell loop for keyboard input
-	while(exitFlag!=1)
+	while (exitFlag != 1)
 	{
 
 		//Display prompt and get input string
 		printf("mcsh> ");
-		input=gets(buffer);
+		input = gets(buffer);
 
 		//parse string into individual arguments
-		lineExtensionFlag=parseCommand(input,lineExtensionFlag);
-		if(lineExtensionFlag==1)
+		lineExtensionFlag = parseCommand(input, lineExtensionFlag);
+		if (lineExtensionFlag == 1)
 			continue;
 
 		//process arguments
-		exitFlag=processInternalCommand();
+		exitFlag = processInternalCommand();
 	}
 	freeVariables();
 	return 0;
-
 }

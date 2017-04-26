@@ -4,14 +4,10 @@
 #include "mcshlist.h"
 #include "memory.h"
 
-
 /***************************************************
 Singly-Linked List declarations and functions.
 Last modified: 3/20/13
 ***************************************************/
-
-
-
 
 /************************
 initList(void *data)
@@ -23,16 +19,16 @@ towards the next node.
 Node *initList(char *label, char *data)
 {
 	Node *node;
-	if(!(node=mcshMalloc(sizeof(Node))))
+	if (!(node = mcshMalloc(sizeof(Node))))
 		return 0;
-	if(!(node->label=(char*)mcshMalloc(50*sizeof(char))))
+	if (!(node->label = (char *)mcshMalloc(50 * sizeof(char))))
 		return 0;
-	if(!(node->data=(char*)mcshMalloc(50*sizeof(char))))
+	if (!(node->data = (char *)mcshMalloc(50 * sizeof(char))))
 		return 0;
 
-	strcpy(node->label,label);
-	strcpy(node->data,data);
-	node->next=NULL;
+	strcpy(node->label, label);
+	strcpy(node->data, data);
+	node->next = NULL;
 	return node;
 }
 
@@ -51,59 +47,59 @@ void mcshInsert(Node **currentList, char *label, char *data)
 	Node *newNode, *temp;
 
 	//initializes node with inputted data
-	newNode=initList(label, data);
+	newNode = initList(label, data);
 
 	//temp will traverse the list. Since currentList is referenced, outside
 	//of the function, traversing will destroy it.
-	temp=*currentList;
+	temp = *currentList;
 
 	//this checks if this is the first element added, and adds it
-	if(temp==NULL)
+	if (temp == NULL)
 	{
-		*currentList=newNode;
+		*currentList = newNode;
 	}
 	else
 	{
-		while(temp)
+		while (temp)
 		{
 			//will call update function if the label already exists
-			if(strcmp(temp->label, label)==0)
+			if (strcmp(temp->label, label) == 0)
 			{
 				//printf("%s found, calling update.\n",label);
 				mcshUpdate(*currentList, label, data);
 				break;
 			}
 			//catch if reached last element of list
-			else if(temp->next==NULL)
+			else if (temp->next == NULL)
 			{
-				if(strcmp(temp->label,label)>0)
+				if (strcmp(temp->label, label) > 0)
 				{
-					newNode->next=temp;
-					*currentList=newNode;
+					newNode->next = temp;
+					*currentList = newNode;
 				}
 				else
 				{
-					temp->next=newNode;
+					temp->next = newNode;
 				}
 				break;
 			}
 			//this essentially checks to see if the element is smaller than
 			//the current head
-			else if(strcmp(temp->label, label)>0)
+			else if (strcmp(temp->label, label) > 0)
 			{
-				newNode->next=temp;
-				*currentList=newNode;
+				newNode->next = temp;
+				*currentList = newNode;
 				break;
 			}
 			//this is for if the element fits in the middle of the list
-			else if(strcmp(temp->next->label, label)>0)
+			else if (strcmp(temp->next->label, label) > 0)
 			{
-				newNode->next=temp->next;
-				temp->next=newNode;
+				newNode->next = temp->next;
+				temp->next = newNode;
 				break;
 			}
 			//update traverse pointers
-			temp=temp->next;
+			temp = temp->next;
 		}
 	}
 	//printf("%s -> %s added.\n\n",label,data);
@@ -118,11 +114,11 @@ Finds inputted label in list and updates the data in it.
 void mcshUpdate(Node *currentList, char *label, char *data)
 {
 	Node *temp;
-	temp=mcshFind(currentList,label);
-	if(temp!=NULL)
+	temp = mcshFind(currentList, label);
+	if (temp != NULL)
 	{
 		//printf("Changing %s -> %s to %s\n",label,temp->data,data);
-		strcpy(temp->data,data);
+		strcpy(temp->data, data);
 	}
 }
 
@@ -135,37 +131,37 @@ Finds inputted label in list and removes it if found.
 void mcshRemove(Node **currentList, char *label)
 {
 	Node *found;
-	found=mcshFind(*currentList,label);	//looks for node
+	found = mcshFind(*currentList, label); //looks for node
 
-    if(found) {
-        Node *temp;
-        temp=*currentList;
-        int i, size;
-        size=listSize(*currentList);
-		for(i=0;i<size;i++)
+	if (found)
+	{
+		Node *temp;
+		temp = *currentList;
+		int i, size;
+		size = listSize(*currentList);
+		for (i = 0; i < size; i++)
 		{
 			//check for first element wanting to be removed
-			if(temp==found)
+			if (temp == found)
 			{
-				*currentList=(*currentList)->next;
+				*currentList = (*currentList)->next;
 				break;
 			}
 			//otherwise check to the next element being the one wanting
 			//to be removed
-			else if(temp->next==found)
+			else if (temp->next == found)
 			{
-				temp->next=found->next;
+				temp->next = found->next;
 				break;
 			}
-			temp=temp->next;
+			temp = temp->next;
 		}
 		//frees removed element
 		mcshFree(found);
 		//printf("Removed %s.\n\n", label);
-    }
-    else
-        printf("Element not found nor removed.\n\n");
-
+	}
+	else
+		printf("Element not found nor removed.\n\n");
 }
 
 /************************
@@ -176,16 +172,15 @@ Finds inputted label in list returns it.
 ************************/
 Node *mcshFind(Node *currentList, char *label)
 {
-	while(currentList)	//just rolls down the list
+	while (currentList) //just rolls down the list
 	{
-		if(strcmp(currentList->label,label)==0)
-			return currentList;		//and returns it if found
-		currentList=currentList->next;
+		if (strcmp(currentList->label, label) == 0)
+			return currentList; //and returns it if found
+		currentList = currentList->next;
 	}
 	//printf("%s not found.\n",label);
 	return NULL;
 }
-
 
 /************************
 mcshHead(Node *currentList)
@@ -197,7 +192,6 @@ Node *mcshHead(Node *currentList)
 {
 	return currentList;
 }
-
 
 /************************
 mcshNext(Node *currentNode)
@@ -218,11 +212,11 @@ returns the size of the list
 ************************/
 int listSize(Node *currentList)
 {
-	int i=0;
-	while(currentList)
+	int i = 0;
+	while (currentList)
 	{
 		i++;
-		currentList=currentList->next;
+		currentList = currentList->next;
 	}
 	return i;
 }
@@ -235,16 +229,15 @@ prints the contents of the list
 ************************/
 void printList(Node *currentList)
 {
-	int i=0;
-	while(currentList)
+	int i = 0;
+	while (currentList)
 	{
 		i++;
 		printNode(currentList);
-		currentList=currentList->next;
+		currentList = currentList->next;
 	}
 	printf("\n");
 }
-
 
 /************************
 printNode(Node *currentList)
@@ -254,6 +247,5 @@ prints the contents of the node referenced
 ************************/
 void printNode(Node *currentNode)
 {
-	printf("%s -> %s\n",currentNode->label,currentNode->data);
-
+	printf("%s -> %s\n", currentNode->label, currentNode->data);
 }
